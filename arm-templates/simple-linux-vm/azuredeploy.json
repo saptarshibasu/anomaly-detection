@@ -123,7 +123,7 @@
     },
     "eventHubNamespaceName": {
       "type": "string",
-      "defaultValue": "ehns-anomaly-detection",
+      "defaultValue": "ehns-adpoc",
       "metadata": {
         "description": "Name of EventHub namespace"
       }
@@ -432,8 +432,8 @@
         "arguments": "[concat('-resourceGroupName \\\"', resourceGroup().name, '\\\"',
                               '-storageAccountName \\\"', parameters('storageAccountName'), '\\\"',
                               '-vmName \\\"', parameters('vmName'), '\\\"',
-                              '-ehnsName \\\"', parameters('eventHubNamespaceName'), '\\\"',
-                              '-ehName \\\"', parameters('eventHubName'), '\\\"')]",
+                              '-eventHubNamespaceName \\\"', parameters('eventHubNamespaceName'), '\\\"',
+                              '-eventHubName \\\"', parameters('eventHubName'), '\\\"')]",
         "primaryScriptUri": "https://raw.githubusercontent.com/saptarshibasu/anomaly-detection/master/arm-templates/simple-linux-vm/install_lad.ps1",
         "supportingScriptUris": [],
         "timeout": "PT30M",
