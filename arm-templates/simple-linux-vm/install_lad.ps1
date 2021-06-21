@@ -16,7 +16,7 @@ $publicSettings = $publicSettings.Replace('__VM_RESOURCE_ID__', $vm.Id)
 # Generate a SAS token for the agent to use to authenticate with the storage account
 $sasasToken = New-AzStorageAccountSASToken -Service Blob,Table -ResourceType Service,Container,Object -Permission "racwdlup" -Context (Get-AzStorageAccount -ResourceGroupName $resourceGroupName -AccountName $storageAccountName).Context -ExpiryTime $([System.DateTime]::Now.AddYears(10))
 
-$ehSasToken = New-AzEventHubAuthorizationRuleSASToken -AuthorizationRuleId (New-AzEventHubAuthorizationRule -ResourceGroupName $resourceGroupName -NamespaceName $eventHubNamespaceName -AuthorizationRuleName ehar-publish -Rights @("Send")).Id -KeyType Primary -ExpiryTime $([System.DateTime]::Now.AddYears(10))
+$ehSasToken = New-AzEventHubAuthorizationRuleSASToken -AuthorizationRuleId (New-AzEventHubAuthorizationRule -ResourceGroupName $resourceGroupName -Namespace $eventHubNamespaceName -Name ehar-publish -Rights @("Send")).Id -KeyType Primary -ExpiryTime $([System.DateTime]::Now.AddYears(10))
 
 # Build the protected settings (storage account SAS token)
 $protectedSettings="{'storageAccountName': '$storageAccountName', 

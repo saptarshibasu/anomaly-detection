@@ -131,7 +131,7 @@
     "eventhubSku": {
       "type": "string",
       "allowedValues": [ "Basic", "Standard" ],
-      "defaultValue": "Basic",
+      "defaultValue": "Standard",
       "metadata": {
         "description": "The messaging tier for service Bus namespace"
       }
