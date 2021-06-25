@@ -100,13 +100,6 @@
         "description": "Name of the Network Security Group"
       }
     },
-    "networkWatcherName": {
-      "type": "string",
-      "defaultValue": "NetWatcher",
-      "metadata": {
-        "description": "Name of the Network Watcher"
-      }
-    },
     "storageAccountName": {
       "type": "string",
       "defaultValue": "sacadpoc",
@@ -156,6 +149,39 @@
       "defaultValue": "dbconsumer",
       "metadata": {
         "description": "Name of Consumer Group"
+      }
+    },
+    "sqlServerName": {
+      "type": "string",
+      "defaultValue": "asql-adpocserver",
+      "metadata": {
+        "description": "The name of the SQL logical server."
+      }
+    },
+    "sqlDBName": {
+      "type": "string",
+      "defaultValue": "asql-adpocdb",
+      "metadata": {
+        "description": "The name of the SQL Database."
+      }
+    },
+    "appName": {
+      "type": "string",
+      "defaultValue": "[concat('fnapp', uniqueString(resourceGroup().id))]",
+      "metadata": {
+        "description": "The name of the function app that you wish to create."
+      }
+    },
+    "runtime": {
+      "type": "string",
+      "defaultValue": "node",
+      "allowedValues": [
+        "node",
+        "dotnet",
+        "java"
+      ],
+      "metadata": {
+        "description": "The language worker runtime to load in the function app."
       }
     }
   },
@@ -268,7 +294,7 @@
       "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
       "apiVersion": "2018-11-30",
       "name": "[parameters('userAssignedIdentitiesName')]",
-      "location": "westus2"
+      "location": "[parameters('location')]"
     }, {
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2020-06-01",
@@ -309,14 +335,6 @@
           "customData": "[base64(parameters('customData'))]",
           "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
         }
-      }
-    }, {
-      "type": "Microsoft.Network/networkWatchers",
-      "apiVersion": "2020-11-01",
-      "name": "[parameters('networkWatcherName')]",
-      "location": "[parameters('location')]",
-      "properties": {
-        "runningOperationIds": []
       }
     }, {
       "type": "Microsoft.Storage/storageAccounts",
@@ -439,6 +457,117 @@
         "timeout": "PT30M",
         "cleanupPreference": "OnSuccess",
         "retentionInterval": "P1D"
+      }
+    }, {
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2020-02-02-preview",
+      "name": "[parameters('sqlServerName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "administratorLogin": "[parameters('adminUsername')]",
+        "administratorLoginPassword": "[parameters('adminPasswordOrKey')]"
+      },
+      "resources": [
+        {
+          "type": "databases",
+          "apiVersion": "2020-08-01-preview",
+          "name": "[parameters('sqlDBName')]",
+          "location": "[parameters('location')]",
+          "sku": {
+            "name": "GP_S_Gen5",
+            "tier": "GeneralPurpose",
+            "family": "Gen5",
+            "capacity": 1
+          },
+          "kind": "v12.0,user,vcore,serverless",
+          "properties": {
+              "collation": "SQL_Latin1_General_CP1_CI_AS",
+              "maxSizeBytes": 2147483648,
+              "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+              "zoneRedundant": false,
+              "readScale": "Disabled",
+              "autoPauseDelay": 60,
+              "storageAccountType": "LRS",
+              "minCapacity": 0.5
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', concat(parameters('sqlServerName')))]"
+          ]
+        }
+      ]
+    }, {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2018-02-01",
+      "name": "[parameters('appName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Y1",
+        "tier": "Dynamic"
+      },
+      "properties": {
+        "name": "[parameters('appName')]",
+        "computeMode": "Dynamic"
+      }
+    }, {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2018-11-01",
+      "name": "[parameters('appName')]",
+      "location": "[parameters('location')]",
+      "kind": "functionapp",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('appName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+      ],
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appName'))]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';EndpointSuffix=', environment().suffixes.storage, ';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value)]"
+            },
+            {
+              "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';EndpointSuffix=', environment().suffixes.storage, ';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value)]"
+            },
+            {
+              "name": "WEBSITE_CONTENTSHARE",
+              "value": "[toLower(parameters('appName'))]"
+            },
+            {
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "~2"
+            },
+            {
+              "name": "WEBSITE_NODE_DEFAULT_VERSION",
+              "value": "~10"
+            },
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference(resourceId('microsoft.insights/components', parameters('appName')), '2020-02-02-preview').InstrumentationKey]"
+            },
+            {
+              "name": "FUNCTIONS_WORKER_RUNTIME",
+              "value": "[parameters('runtime')]"
+            }
+          ]
+        }
+      }
+    }, {
+      "type": "microsoft.insights/components",
+      "apiVersion": "2020-02-02-preview",
+      "name": "[parameters('appName')]",
+      "location": "[parameters('location')]",
+      "tags": {
+        "[concat('hidden-link:', resourceId('Microsoft.Web/sites', parameters('appName')))]": "Resource"
+      },
+      "properties": {
+        "ApplicationId": "[parameters('appName')]",
+        "Request_Source": "rest",
+        "Application_Type": "web"
       }
     }
   ],

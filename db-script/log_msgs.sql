@@ -1,0 +1,19 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[LOG_MSGS](
+	[PARTITION_KEY] [varchar](100) NULL,
+	[ROW_KEY] [varchar](100) NULL,
+	[EVENT_TIME] [datetime] NULL,
+	[IP_ADDRESS] [varchar](20) NULL,
+	[PORT] [varchar](10) NULL,
+	[USER_NM] [varchar](20) NULL,
+	[MSG] [varchar](2000) NULL,
+	[SUCCESS_IND] [tinyint] NULL,
+	[PREV_SUCCES_CNT] [int] NULL,
+	[PREV_FAILURE_CNT] [int] NULL,
+	[INVALID_USER_IND] [tinyint] NULL,
+	[PRE_FAILURE_INVALID_USR_CNT] [int] NULL
+) ON [PRIMARY]
+GO
