@@ -23,9 +23,9 @@ $protectedSettings="{'storageAccountName': '$storageAccountName',
                     'storageAccountSasToken': '$sasasToken'
                     'sinksConfig': [
                         {
-                            'name': $eventHubName,
+                            'name': '$eventHubName',
                             'type': 'EventHub',
-                            'sasURL': $ehSasToken
+                            'sasURL': '$ehSasToken'
                         }
                     ]}"
 

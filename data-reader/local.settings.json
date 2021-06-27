@@ -1,0 +1,12 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+      "dbConnectionString": "@Microsoft.KeyVault(SecretUri=https://adpockeyvault.vault.azure.net/secrets/dbConnStringSecretName/7f91d6ee015641f796250e90e7f1afc3)",
+      "eventHubConectionString": "@Microsoft.KeyVault(SecretUri=https://adpockeyvault.vault.azure.net/secrets/ehConnStringSecretName/78ab644fcbe243ceb0bba9e46d374647)"
+    },
+    "ConnectionStrings": {
+    },
+    "Host": {
+      "CORS": "*"
+    }
+  }
