@@ -174,7 +174,7 @@
     },
     "listenSASKeyName": {
       "type": "string",
-      "defaultValue": "listenSASKeyName",
+      "defaultValue": "listenSasKey",
       "metadata": {
         "description": "EventHub listen SAS key name."
       }
