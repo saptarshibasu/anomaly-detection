@@ -19,13 +19,13 @@ $sasasToken = New-AzStorageAccountSASToken -Service Blob,Table -ResourceType Ser
 $ehSasToken = New-AzEventHubAuthorizationRuleSASToken -AuthorizationRuleId (New-AzEventHubAuthorizationRule -ResourceGroupName $resourceGroupName -Namespace $eventHubNamespaceName -Name ehar-publish -Rights @("Send")).Id -KeyType Primary -ExpiryTime $([System.DateTime]::Now.AddYears(10))
 
 # Build the protected settings (storage account SAS token)
-$protectedSettings="{'storageAccountName': '$storageAccountName', 
-                    'storageAccountSasToken': '$sasasToken'
+$protectedSettings="{'storageAccountName': $storageAccountName, 
+                    'storageAccountSasToken': $sasasToken
                     'sinksConfig': [
                         {
-                            'name': '$eventHubName',
+                            'name': $eventHubName,
                             'type': 'EventHub',
-                            'sasURL': '$ehSasToken'
+                            'sasURL': $ehSasToken
                         }
                     ]}"
 
