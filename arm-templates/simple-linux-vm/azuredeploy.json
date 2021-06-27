@@ -40,7 +40,7 @@
       }
     },
     "adminPasswordOrKey": {
-      "type": "string",
+      "type": "securestring",
       "metadata": {
         "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
       }
@@ -629,6 +629,7 @@
         "enabledForDeployment": "[parameters('enabledForDeployment')]",
         "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
         "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
+        "enableSoftDelete": false,
         "tenantId": "[parameters('tenantId')]",
         "accessPolicies": [
           {
@@ -669,7 +670,7 @@
         "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
       ],
       "properties": {
-        "value": "[listkeys(resourceId('Microsoft.EventHub/namespaces/eventhubs/authorizationRules', parameters('eventHubNamespaceName'), parameters('eventHubName'), parameters('listenSASKeyName')), '2017-04-01').primaryConnectionString]"
+        "value": "[concat('Server=tcp:',reference(parameters('sqlServerName')).fullyQualifiedDomainName,',1433;Initial Catalog=',parameters('sqlDBName'),';Persist Security Info=False;User ID=',parameters('adminUsername'),';Password=',parameters('adminPasswordOrKey'),';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
       }
     }, {
       "type": "Microsoft.Web/sites",
