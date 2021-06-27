@@ -21,13 +21,16 @@ $ehSasToken = (New-AzEventHubAuthorizationRuleSASToken -AuthorizationRuleId (New
 # Build the protected settings (storage account SAS token)
 $protectedSettings="{'storageAccountName': '$storageAccountName', 
                     'storageAccountSasToken': '$saSasToken',
-                    'sinksConfig': [
-                        {
-                            'name': '$eventHubName',
-                            'type': 'EventHub',
-                            'sasURL': 'https://$eventHubNamespaceName.servicebus.windows.net/$($eventHubName)?$ehSasToken&skn=publishSasKey'
-                        }
-                    ]}"
+                    'sinksConfig': {
+                        'sink': [
+                            {
+                                'name': '$eventHubName',
+                                'type': 'EventHub',
+                                'sasURL': 'https://$($eventHubNamespaceName).servicebus.windows.net/$($eventHubName)?$($ehSasToken)'
+                            }
+                        ]
+                    }
+                }"
 
 # Finally, install the extension with the settings you built
 Set-AzVMExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Location $vm.Location -ExtensionType LinuxDiagnostic -Publisher Microsoft.Azure.Diagnostics -Name LinuxDiagnostic -SettingString $publicSettings -ProtectedSettingString $protectedSettings -TypeHandlerVersion 4.0
