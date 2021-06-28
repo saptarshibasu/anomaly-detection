@@ -16,7 +16,7 @@ $publicSettings = $publicSettings.Replace('__VM_RESOURCE_ID__', $vm.Id)
 # Generate a SAS token for the agent to use to authenticate with the storage account
 $saSasToken = New-AzStorageAccountSASToken -Service Blob,Table -ResourceType Service,Container,Object -Permission "racwdlup" -Context (Get-AzStorageAccount -ResourceGroupName $resourceGroupName -AccountName $storageAccountName).Context -ExpiryTime $([System.DateTime]::Now.AddYears(10))
 
-$ehSasToken = (New-AzEventHubAuthorizationRuleSASToken -AuthorizationRuleId (New-AzEventHubAuthorizationRule -ResourceGroupName $resourceGroupName -Namespace $eventHubNamespaceName -EventHub $eventHubName -Name publishSasKey -Rights @("Send")).Id -KeyType Primary -ExpiryTime $([System.DateTime]::Now.AddYears(10))).SharedAccessSignature.Replace('Primary','publishSasKey')
+$ehSasToken = (New-AzEventHubAuthorizationRuleSASToken -AuthorizationRuleId (New-AzEventHubAuthorizationRule -ResourceGroupName $resourceGroupName -Namespace $eventHubNamespaceName -EventHub $eventHubName -Name publishSasKey -Rights @("Send")).Id -KeyType Primary -ExpiryTime $([System.DateTime]::Now.AddYears(10))).SharedAccessSignature.Trim().Replace('Primary','publishSasKey')
 
 # Build the protected settings (storage account SAS token)
 $protectedSettings="{'storageAccountName': '$storageAccountName', 
@@ -26,7 +26,7 @@ $protectedSettings="{'storageAccountName': '$storageAccountName',
                             {
                                 'name': '$eventHubName',
                                 'type': 'EventHub',
-                                'sasURL': 'https://$($eventHubNamespaceName).servicebus.windows.net/$($eventHubName)?$($ehSasToken.Trim())'
+                                'sasURL': 'https://$($eventHubNamespaceName).servicebus.windows.net/$($eventHubName)?$($ehSasToken)'
                             }
                         ]
                     }
