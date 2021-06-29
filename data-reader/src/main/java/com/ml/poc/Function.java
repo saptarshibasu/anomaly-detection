@@ -6,13 +6,13 @@ import com.microsoft.azure.functions.annotation.EventHubTrigger;
 import com.microsoft.azure.functions.annotation.FunctionName;
 
 public class Function {
-    @FunctionName("processSensorData")
-    public void processSensorData(
+    @FunctionName("fnappadpoc")
+    public void fnappadpoc(
         @EventHubTrigger(
             name = "msg",
-            eventHubName = "", // blank because the value is included in the connection string
+            eventHubName = "eh-syslogmsgs", // blank because the value is included in the connection string
             cardinality = Cardinality.ONE,
-            connection = "eventHubConnectionString")
+            connection = "EventHubConnectionString")
             String item,
             final ExecutionContext context) {
 

@@ -268,6 +268,13 @@
       "metadata": {
         "description": "Specifies the value of the secret that you want to create."
       }
+    },
+    "storageAccConnStrSecretName": {
+      "type": "string",
+      "defaultValue": "storageAccConnStringSecretName",      
+      "metadata": {
+        "description": "Specifies the value of the secret that you want to create."
+      }
     }
   },
   "variables": {
@@ -285,6 +292,15 @@
             "keyData": "[parameters('adminPasswordOrKey')]"
           }
         ]
+      }
+    },
+    "accountSasProperties": {
+      "type": "object",
+      "defaultValue": {
+        "signedServices": "b",
+        "signedPermission": "rw",
+        "signedExpiry": "2019-03-01T00:00:01Z",
+        "signedResourceTypes": "o"
       }
     }
   },
@@ -661,6 +677,17 @@
         "value": "[concat('Server=tcp:',reference(parameters('sqlServerName')).fullyQualifiedDomainName,',1433;Initial Catalog=',parameters('sqlDBName'),';Persist Security Info=False;User ID=',parameters('adminUsername'),';Password=',parameters('adminPasswordOrKey'),';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]"
       }
     }, {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2019-09-01",
+      "name": "[concat(parameters('keyVaultName'), '/', parameters('storageAccConnStrSecretName'))]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+      ],
+      "properties": {
+        "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-04-01').keys[0].value,';EndpointSuffix=core.windows.net')]"
+      }
+    }, {
       "type": "Microsoft.Web/sites",
       "apiVersion": "2018-11-01",
       "name": "[parameters('appName')]",
@@ -691,8 +718,9 @@
             "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
           ],
           "properties": {
-            "eventHubConectionString": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('eventHubConnStrSecretName'))).secretUriWithVersion, ')')]",
-            "dbConnectionString": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('dbConnStrSecretName'))).secretUriWithVersion, ')')]"
+            "AzureWebJobsStorage": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('storageAccConnStrSecretName'))).secretUriWithVersion, ')')]",
+            "EventHubConectionString": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('eventHubConnStrSecretName'))).secretUriWithVersion, ')')]",
+            "DbConnectionString": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('dbConnStrSecretName'))).secretUriWithVersion, ')')]"
           }
         }
       ]
