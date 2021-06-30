@@ -20,6 +20,7 @@
         ]
       }, 
       "syslogEvents": {
+        "sinks": "eh-syslogmsgs",
         "syslogEventConfiguration": {
           "LOG_AUTH": "LOG_DEBUG", 
           "LOG_AUTHPRIV": "LOG_DEBUG", 

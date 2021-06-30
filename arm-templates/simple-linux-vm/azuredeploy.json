@@ -167,7 +167,7 @@
     },
     "appName": {
       "type": "string",
-      "defaultValue": "[concat('fnappadpoc')]",
+      "defaultValue": "fnappadpoc",
       "metadata": {
         "description": "The name of the function app that you wish to create."
       }
@@ -229,7 +229,8 @@
     "keysPermissions": {
       "type": "array",
       "defaultValue": [
-        "list"
+        "list",
+        "get"
       ],
       "metadata": {
         "description": "Specifies the permissions to keys in the vault. Valid values are: all, encrypt, decrypt, wrapKey, unwrapKey, sign, verify, get, list, create, update, import, delete, backup, restore, recover, and purge."
@@ -238,7 +239,8 @@
     "secretsPermissions": {
       "type": "array",
       "defaultValue": [
-        "list"
+        "list",
+        "get"
       ],
       "metadata": {
         "description": "Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge."
@@ -292,15 +294,6 @@
             "keyData": "[parameters('adminPasswordOrKey')]"
           }
         ]
-      }
-    },
-    "accountSasProperties": {
-      "type": "object",
-      "defaultValue": {
-        "signedServices": "b",
-        "signedPermission": "rw",
-        "signedExpiry": "2019-03-01T00:00:01Z",
-        "signedResourceTypes": "o"
       }
     }
   },
@@ -718,6 +711,8 @@
             "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
           ],
           "properties": {
+            "WEBSITE_CONTENTSHARE": "fnappadpoc",
+            "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('storageAccConnStrSecretName'))).secretUriWithVersion, ')')]",
             "AzureWebJobsStorage": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('storageAccConnStrSecretName'))).secretUriWithVersion, ')')]",
             "EventHubConectionString": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('eventHubConnStrSecretName'))).secretUriWithVersion, ')')]",
             "DbConnectionString": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('dbConnStrSecretName'))).secretUriWithVersion, ')')]"

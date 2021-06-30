@@ -1,8 +1,0 @@
-{
-    "IsEncrypted": false,
-    "Values": {
-      "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=sacadpoc;AccountKey=rfeMXqwPZpBfY2qCMyIerVwfwQv5yHZ4GD8RDkwcLu6VIffcdyZWePionzGjd4dVAbjQfZ+1LSKepTi7PI99Ww==;EndpointSuffix=core.windows.net",
-      "DbConnectionString": "",
-      "EventHubConnectionString": "Endpoint=sb://ehns-adpoc.servicebus.windows.net/;SharedAccessKeyName=listenSasKey;SharedAccessKey=BO0S4WD7camjAqxN684C8HEwg+arXTsUrBSGob7eB4Y=;EntityPath=eh-syslogmsgs"
-    }
-  }
