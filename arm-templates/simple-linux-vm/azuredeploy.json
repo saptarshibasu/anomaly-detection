@@ -716,7 +716,7 @@
             "WEBSITE_CONTENTSHARE": "fnappadpoc",
             "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('storageAccConnStrSecretName'))).secretUriWithVersion, ')')]",
             "AzureWebJobsStorage": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('storageAccConnStrSecretName'))).secretUriWithVersion, ')')]",
-            "EventHubConectionString": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('eventHubConnStrSecretName'))).secretUriWithVersion, ')')]",
+            "EventHubConnectionString": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('eventHubConnStrSecretName'))).secretUriWithVersion, ')')]",
             "DbConnectionString": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('dbConnStrSecretName'))).secretUriWithVersion, ')')]"
           }
         }
