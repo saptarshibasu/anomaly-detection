@@ -33,4 +33,4 @@ $protectedSettings="{'storageAccountName': '$storageAccountName',
                 }"
 
 # Finally, install the extension with the settings you built
-Set-AzVMExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Location $vm.Location -ExtensionType LinuxDiagnostic -Publisher Microsoft.Azure.Diagnostics -Name LinuxDiagnostic -SettingString $publicSettings -ProtectedSettingString $protectedSettings -TypeHandlerVersion 4.x
+Set-AzVMExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Location $vm.Location -ExtensionType LinuxDiagnostic -Publisher Microsoft.Azure.Diagnostics -Name LinuxDiagnostic -SettingString $publicSettings -ProtectedSettingString $protectedSettings -TypeHandlerVersion 4.*
