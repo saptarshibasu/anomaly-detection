@@ -711,6 +711,8 @@
             "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
           ],
           "properties": {
+            "FUNCTIONS_EXTENSION_VERSION": "~3",
+            "FUNCTIONS_WORKER_RUNTIME": "java",
             "WEBSITE_CONTENTSHARE": "fnappadpoc",
             "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('storageAccConnStrSecretName'))).secretUriWithVersion, ')')]",
             "AzureWebJobsStorage": "[concat('@Microsoft.KeyVault(SecretUri=', reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('storageAccConnStrSecretName'))).secretUriWithVersion, ')')]",
