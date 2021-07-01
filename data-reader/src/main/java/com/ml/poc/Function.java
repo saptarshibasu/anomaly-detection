@@ -10,7 +10,8 @@ public class Function {
     public void fnappadpoc(
         @EventHubTrigger(
             name = "msg",
-            eventHubName = "eh-syslogmsgs", // blank because the value is included in the connection string
+            eventHubName = "eh-syslogmsgs",
+            consumerGroup = "dbconsumer",
             cardinality = Cardinality.ONE,
             connection = "EventHubConnectionString")
             String item,
