@@ -1,0 +1,13 @@
+default_bits        = 2048
+distinguished_name  = dn
+x509_extensions     = san
+req_extensions      = san
+extensions          = san
+prompt              = no
+[ dn ]
+countryName         = US
+stateOrProvinceName = Massachusetts
+localityName        = Boston
+organizationName    = MyCompany1
+[ san ]
+subjectAltName      = IP:127.0.0.1
