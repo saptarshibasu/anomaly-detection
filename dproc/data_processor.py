@@ -9,7 +9,7 @@ with open('../sample-data/LinuxSysLogVer2v02.csv') as csv_file:
 
     last_login_success = {}
     last_login_failure_ip = {}
-    print("login_success,wrong_password,invalid_user,last_login_success,last_ip_login_success,user,source_ip,source_port,anomaly")
+    print("login_success,wrong_password,invalid_user,last_login_success,last_ip_login_failure,user,source_ip,source_port,anomaly")
     for row in csv_reader:
         if line_count != 0:
             match_con_success = re.search(regex_connection_success, row[15])
