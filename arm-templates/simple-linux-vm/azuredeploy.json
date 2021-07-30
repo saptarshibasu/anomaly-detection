@@ -15,26 +15,6 @@
         "description": "Username for the Virtual Machine."
       }
     },
-    "customData": {
-      "type": "string",
-      "defaultValue": "
-      sudo apt-get update;
-      sudo apt-get install -y python2;
-      sudo /usr/bin/update-alternatives --remove-all python;
-      sudo /usr/bin/update-alternatives --install /usr/bin/python python /usr/bin/python2 1;
-      sudo /usr/bin/update-alternatives --set python /usr/bin/python2
-      sudo apt-get install wget
-      sudo apt-get install python-pip
-      sudo pip install tornado
-      sudo wget https://raw.githubusercontent.com/saptarshibasu/anomaly-detection/main/webdump/RootCA.crt
-      sudo cp RootCA.crt /usr/local/share/ca-certificates/
-      sudo update-ca-certificates
-      
-      ",
-      "metadata": {
-        "description": "String passed down to the Virtual Machine."
-      }
-    },
     "authenticationType": {
       "type": "string",
       "defaultValue": "password",
@@ -398,7 +378,7 @@
       "location": "[parameters('location')]"
     }, {
       "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "2020-06-01",
+      "apiVersion": "2021-03-01",
       "name": "[parameters('vmName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
@@ -433,7 +413,6 @@
           "computerName": "[parameters('vmName')]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPasswordOrKey')]",
-          "customData": "[base64(parameters('customData'))]",
           "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
         }
       }

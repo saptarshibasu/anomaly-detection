@@ -26,7 +26,7 @@ $protectedSettings="{'storageAccountName': '$storageAccountName',
                             {
                                 'name': '$eventHubName',
                                 'type': 'EventHub',
-                                'sasURL': 'https://127.0.0.1/$($eventHubName)?$($ehSasToken)'
+                                'sasURL': 'https://$($eventHubNamespaceName).servicebus.windows.net/$($eventHubName)?$($ehSasToken)'
                             }
                         ]
                     }
